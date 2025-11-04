@@ -2,16 +2,18 @@
 <table>
 <tbody>
 <td align="center">
-<img src="" width="0" height="0"><br>
+<!-- <img src="" width="0" height="0"> -->
+<br>
+<br>
 <sub>
   
-  [![MIT License](https://img.shields.io/badge/License-GNU_GPLv3-blue.svg?style=for-the-badge)](https://choosealicense.com/licenses/mit/)&nbsp;&nbsp;&nbsp;
+  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://choosealicense.com/licenses/gpl-3.0/)&nbsp;&nbsp;&nbsp;
   ![Maintenance](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)&nbsp;&nbsp;&nbsp;
   ![Extension Version](https://img.shields.io/github/package-json/v/esteban-cz/nextjs-plus/master?style=for-the-badge&label=Version)&nbsp;&nbsp;&nbsp;
   ![GitHub last commit](https://img.shields.io/github/last-commit/esteban-cz/nextjs-plus?style=for-the-badge)
   
-</sub><br>
-<img src="" width="0" height="0">
+</sub><br><br>
+<!-- <img src="" width="0" height="0"> -->
 </td>
 </tbody>
 </table>
