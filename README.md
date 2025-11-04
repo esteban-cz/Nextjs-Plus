@@ -1,41 +1,38 @@
-# Create Next.js Project (VS Code Extension)
+<div align="center">
+<table>
+<tbody>
+<td align="center">
+<img src="" width="0" height="0"><br>
+<sub>
+  
+  [![MIT License](https://img.shields.io/badge/License-GNU_GPLv3-blue.svg?style=for-the-badge)](https://choosealicense.com/licenses/mit/)&nbsp;&nbsp;&nbsp;
+  ![Maintenance](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)&nbsp;&nbsp;&nbsp;
+  ![Extension Version](https://img.shields.io/github/package-json/v/esteban-cz/nextjs-plus/master?style=for-the-badge&label=Version)&nbsp;&nbsp;&nbsp;
+  ![GitHub last commit](https://img.shields.io/github/last-commit/esteban-cz/nextjs-plus?style=for-the-badge)
+  
+</sub><br>
+<img src="" width="0" height="0">
+</td>
+</tbody>
+</table>
+</div>
 
-Create a brand new Next.js application from inside VS Code with only a project name.
+<br>
+
+# <div align="center"><u>Next.js Plus</u></div>
 
 ## Features
-- Status bar shortcut that lives in the lower left corner (`Next.js` with a rocket icon).
-- Prompts only for the project name and destination folder, then runs `create-next-app` with a curated default set of options.
-- Uses the equivalent of:
-  ```bash
-  npx create-next-app@latest <name> \
-    --typescript --tailwind --eslint \
-    --app --no-src-dir \
-    --no-experimental-app \
-    --turbopack --no-react-compiler \
-    --import-alias "@/*" \
-    --use-npm
-  ```
-- Streams CLI output to a dedicated VS Code output channel and opens the new project in a fresh window.
-- Per-project defaults are configurable via VS Code settings, with optional prompts for each Create Next App flag and the ability to skip automatically opening a new window.
 
-## Usage
-1. Install dependencies and compile:
-   ```bash
-   npm install
-   npm run compile
-   ```
-2. Press `F5` in VS Code to launch the extension in a new Extension Development Host window.
-3. Click the `Next.js` status bar item in the bottom-left corner (or run the `Create Next.js Project` command from the Command Palette).
-4. Enter the project name, pick the target folder when prompted, and wait for scaffolding to finish. When it finishes, the new project opens automatically in a fresh VS Code window.
+- Launch a new Next.js project from the status bar (`Next.js` entry at the bottom-left corner).
+- Guided prompts for the project name and destination folder, with additional questions only when you enable the matching “Prompt …” toggles.
+- Runs `npx create-next-app@latest` with curated defaults (TypeScript, Tailwind, ESLint, App Router, no `src/`, no experimental features, Turbopack, no React Compiler, import alias `@/*`, npm).
+- Streams scaffold progress to a dedicated VS Code output channel.
+- Optionally open the generated project automatically in a fresh VS Code window.
 
-> Tip: The extension picks the first open workspace folder as the target location. If multiple folders are open, you'll be asked to choose one. If none are open, you'll be prompted to select a folder on disk.
+---
 
 ## Settings
-All options map directly to Create Next App flags and live under **Next.js Plus Configuration** in VS Code settings (`nextjsPlus.*`). Each option has:
-- a default value (boolean toggle or string for the import alias); and
-- a companion `Prompt ...` checkbox that, when enabled, asks during project creation and ignores the stored default.
 
-Available settings:
 - `TypeScript` / `Prompt for TypeScript`
 - `Tailwind CSS` / `Prompt for Tailwind CSS`
 - `ESLint` / `Prompt for ESLint`
@@ -47,13 +44,19 @@ Available settings:
 - `Import alias` / `Prompt for import alias`
 - `Open in new window`
 
-## Packaging
-Build the extension package (`.vsix`) with:
-```bash
-npm run compile
-npx vsce package
-```
+Every setting lives under **Next.js Plus Configuration** (`nextjsPlus.*`) and maps directly to a Create Next App flag. When a “Prompt …” toggle is enabled, the stored default is ignored and you’re asked during project creation.
 
-## Known Limitations
-- `npx` must be available on your system PATH.
-- `create-next-app` must be able to download templates (requires an active internet connection).
+---
+
+## Release Notes
+
+### 1.0.0
+
+- Initial public release of Next.js Plus.
+- Create a Next.js project from the status bar with curated defaults.
+- Configure defaults and per-run prompts for every Create Next App flag.
+- Optionally skip opening the generated project in a new VS Code window.
+
+---
+
+**Enjoy!**

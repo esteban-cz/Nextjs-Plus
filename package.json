@@ -2,9 +2,9 @@
   "name": "nextjs-plus",
   "displayName": "Next.js Plus",
   "description": "Create a new Next.js application from VS Code with a single click.",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "publisher": "estyxq",
-  "license": "MIT",
+  "license": "GPL-3.0-only",
   "engines": {
     "vscode": "^1.84.0"
   },
@@ -12,6 +12,11 @@
     "Other"
   ],
   "main": "./dist/extension.js",
+  "icon": "icon/Quick-Git-logo.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/esteban-cz/nextjs-plus"
+  },
   "activationEvents": [
     "onStartupFinished"
   ],
