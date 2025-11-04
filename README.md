@@ -19,7 +19,7 @@
 <br>
 
 <div align="center">
-  <p style="margin: 0 0 12px 0; font-size: 1.75rem;"><u>Next.js Plus</u></p>
+  <p style="margin: 0 0 12px 0; font-size: 2.75rem;"><u><b>Next.js Plus</b></u></p>
   <img src="icons/nextjs-plus-logo.png" width="100" height="100" alt="Next.js Plus logo">
 </div>
 
