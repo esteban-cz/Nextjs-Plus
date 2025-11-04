@@ -63,7 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.StatusBarAlignment.Left,
     100
   );
-  statusBarItem.text = "Next.js $(diff-added) [DEV]";
+  statusBarItem.text = "Next.js $(diff-added)";
   statusBarItem.tooltip = "Create a new Next.js project";
   statusBarItem.command = "nextjs-plus.createProject";
   statusBarItem.show();
