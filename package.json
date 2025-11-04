@@ -1,0 +1,175 @@
+{
+  "name": "nextjs-plus",
+  "displayName": "Next.js Plus",
+  "description": "Create a new Next.js application from VS Code with a single click.",
+  "version": "0.0.1",
+  "publisher": "estyxq",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "nextjs-plus.createProject",
+        "title": "Create Next.js Project"
+      }
+    ],
+    "configuration": {
+      "title": "Next.js Plus Configuration",
+      "properties": {
+        "nextjsPlus.typescript": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable TypeScript support (--typescript). Ignored when 'Prompt for TypeScript' is enabled.",
+          "markdownDescription": "**TypeScript**  \nEnable TypeScript support (`--typescript`). This value is used unless 'Prompt for TypeScript' is enabled.",
+          "order": 10
+        },
+        "nextjsPlus.typescriptPrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompt whether to enable TypeScript every time a project is created.",
+          "markdownDescription": "_Prompt for TypeScript_  \nAsk at creation time whether to enable TypeScript, ignoring the saved default.",
+          "order": 11
+        },
+        "nextjsPlus.tailwind": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include Tailwind CSS configuration (--tailwind). Ignored when 'Prompt for Tailwind CSS' is enabled.",
+          "markdownDescription": "**Tailwind CSS**  \nInclude Tailwind CSS scaffolding (`--tailwind`). This value is used unless 'Prompt for Tailwind CSS' is enabled.",
+          "order": 20
+        },
+        "nextjsPlus.tailwindPrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompt whether to include Tailwind CSS when creating a project.",
+          "markdownDescription": "_Prompt for Tailwind CSS_  \nAsk at creation time whether to include Tailwind CSS.",
+          "order": 21
+        },
+        "nextjsPlus.eslint": {
+          "type": "boolean",
+          "default": true,
+          "description": "Add ESLint configuration (--eslint). Ignored when 'Prompt for ESLint' is enabled.",
+          "markdownDescription": "**ESLint**  \nAdd ESLint configuration (`--eslint`). This value is used unless 'Prompt for ESLint' is enabled.",
+          "order": 30
+        },
+        "nextjsPlus.eslintPrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompt whether to add ESLint when creating a project.",
+          "markdownDescription": "_Prompt for ESLint_  \nAsk at creation time whether to include ESLint.",
+          "order": 31
+        },
+        "nextjsPlus.appRouter": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use the App Router (--app). Ignored when 'Prompt for App Router' is enabled.",
+          "markdownDescription": "**App Router**  \nGenerate the App Router structure (`--app`). This value is used unless 'Prompt for App Router' is enabled.",
+          "order": 40
+        },
+        "nextjsPlus.appRouterPrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompt whether to use the App Router when creating a project.",
+          "markdownDescription": "_Prompt for App Router_  \nAsk at creation time whether to use the App Router.",
+          "order": 41
+        },
+        "nextjsPlus.useSrcDirectory": {
+          "type": "boolean",
+          "default": false,
+          "description": "Create a dedicated src/ directory (--src-dir). Ignored when 'Prompt for src/ directory' is enabled.",
+          "markdownDescription": "**Create src/ directory**  \nPlace generated files inside `src/` (`--src-dir`). This value is used unless 'Prompt for src/ directory' is enabled.",
+          "order": 50
+        },
+        "nextjsPlus.srcDirectoryPrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompt whether to create a src/ directory when scaffolding a project.",
+          "markdownDescription": "_Prompt for src/ directory_  \nAsk at creation time whether to create a `src/` directory.",
+          "order": 51
+        },
+        "nextjsPlus.experimentalApp": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable experimental App Router features (--experimental-app). Ignored when 'Prompt for experimental App features' is enabled.",
+          "markdownDescription": "**Experimental App features**  \nEnable experimental App Router capabilities (`--experimental-app`). This value is used unless 'Prompt for experimental App features' is enabled.",
+          "order": 60
+        },
+        "nextjsPlus.experimentalAppPrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompt whether to enable experimental App Router features.",
+          "markdownDescription": "_Prompt for experimental App features_  \nAsk at creation time whether to enable experimental App Router capabilities.",
+          "order": 61
+        },
+        "nextjsPlus.turbopack": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use Turbopack for development (--turbopack). Ignored when 'Prompt for Turbopack' is enabled.",
+          "markdownDescription": "**Turbopack**  \nUse Turbopack for the development server (`--turbopack`). This value is used unless 'Prompt for Turbopack' is enabled.",
+          "order": 70
+        },
+        "nextjsPlus.turbopackPrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompt whether to use Turbopack when creating a project.",
+          "markdownDescription": "_Prompt for Turbopack_  \nAsk at creation time whether to run the dev server with Turbopack.",
+          "order": 71
+        },
+        "nextjsPlus.reactCompiler": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable the experimental React Compiler (--react-compiler). Ignored when 'Prompt for React Compiler' is enabled.",
+          "markdownDescription": "**React Compiler**  \nEnable the experimental React Compiler (`--react-compiler`). This value is used unless 'Prompt for React Compiler' is enabled.",
+          "order": 80
+        },
+        "nextjsPlus.reactCompilerPrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompt whether to enable the experimental React Compiler.",
+          "markdownDescription": "_Prompt for React Compiler_  \nAsk at creation time whether to enable the experimental React Compiler.",
+          "order": 81
+        },
+        "nextjsPlus.importAlias": {
+          "type": "string",
+          "default": "@/*",
+          "description": "Set the import alias passed to create-next-app (--import-alias). Ignored when 'Prompt for import alias' is enabled.",
+          "markdownDescription": "**Import alias**  \nDefines the import alias passed to Create Next App (`--import-alias`). This value is used unless 'Prompt for import alias' is enabled.",
+          "order": 90
+        },
+        "nextjsPlus.importAliasPrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompt for the import alias to use when creating a project.",
+          "markdownDescription": "_Prompt for import alias_  \nAsk at creation time which import alias to use.",
+          "order": 91
+        },
+        "nextjsPlus.openInNewWindow": {
+          "type": "boolean",
+          "default": true,
+          "description": "Open the generated project in a new VS Code window after scaffolding.",
+          "markdownDescription": "**Open in new window**  \nAutomatically open the generated project in a new VS Code window once scaffolding completes.",
+          "order": 100
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "prepublishOnly": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^18.17.0",
+    "@types/vscode": "^1.84.0",
+    "typescript": "^5.2.2",
+    "vsce": "^2.15.0"
+  }
+}

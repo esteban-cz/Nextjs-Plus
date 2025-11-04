@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.vsix
+.vscode-test/
+npm-debug.log*
+yarn.lock
+.DS_Store
