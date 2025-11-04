@@ -37,6 +37,10 @@ interface BooleanQuickPickItem extends vscode.QuickPickItem {
   value: boolean;
 }
 
+interface DefaultLocationQuickPickItem extends vscode.QuickPickItem {
+  target: "select" | "clear";
+}
+
 let statusBarItem: vscode.StatusBarItem | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
@@ -59,12 +63,23 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.StatusBarAlignment.Left,
     100
   );
-  statusBarItem.text = "Next.js $(diff-added)";
+  statusBarItem.text = "Next.js $(diff-added) [DEV]";
   statusBarItem.tooltip = "Create a new Next.js project";
   statusBarItem.command = "nextjs-plus.createProject";
   statusBarItem.show();
 
-  context.subscriptions.push(createProjectCommand, statusBarItem);
+  const selectDefaultLocationCommand = vscode.commands.registerCommand(
+    "nextjs-plus.selectDefaultLocation",
+    async () => {
+      await handleDefaultLocationSelection();
+    }
+  );
+
+  context.subscriptions.push(
+    createProjectCommand,
+    selectDefaultLocationCommand,
+    statusBarItem
+  );
 }
 
 export function deactivate() {
@@ -91,12 +106,17 @@ async function createNextJsProject(): Promise<void> {
     return;
   }
 
-  const projectOptions = await resolveProjectOptions();
+  const config = vscode.workspace.getConfiguration(CONFIG_NAMESPACE);
+
+  const projectOptions = await resolveProjectOptions(config);
   if (!projectOptions) {
     return;
   }
 
-  const targetFolder = await resolveTargetFolder();
+  const defaultLocationSetting = config.get<string>("defaultLocation", "").trim();
+  const targetFolder = await resolveTargetFolder(
+    defaultLocationSetting ? defaultLocationSetting : undefined
+  );
   if (!targetFolder) {
     return;
   }
@@ -135,9 +155,7 @@ async function createNextJsProject(): Promise<void> {
     }
   );
 
-  const shouldOpenInNewWindow = vscode.workspace
-    .getConfiguration(CONFIG_NAMESPACE)
-    .get<boolean>("openInNewWindow", true);
+  const shouldOpenInNewWindow = config.get<boolean>("openInNewWindow", true);
 
   if (shouldOpenInNewWindow) {
     vscode.window.showInformationMessage(
@@ -173,9 +191,9 @@ async function createNextJsProject(): Promise<void> {
   }
 }
 
-async function resolveProjectOptions(): Promise<ProjectOptions | undefined> {
-  const config = vscode.workspace.getConfiguration(CONFIG_NAMESPACE);
-
+async function resolveProjectOptions(
+  config: vscode.WorkspaceConfiguration
+): Promise<ProjectOptions | undefined> {
   const useTypeScript = await resolveBooleanOption({
     config,
     settingKey: "typescript",
@@ -376,27 +394,24 @@ async function resolveStringOption(params: {
   return value?.trim();
 }
 
-async function resolveTargetFolder(): Promise<vscode.Uri | undefined> {
-  const workspaceFolders = vscode.workspace.workspaceFolders;
-  if (workspaceFolders && workspaceFolders.length === 1) {
-    return workspaceFolders[0].uri;
-  }
-
-  if (workspaceFolders && workspaceFolders.length > 1) {
-    const selection = await vscode.window.showQuickPick(
-      workspaceFolders.map((folder) => ({
-        label: folder.name,
-        description: folder.uri.fsPath,
-        folder,
-      })),
-      {
-        placeHolder:
-          "Select the workspace folder where the project will be created",
-        ignoreFocusOut: true,
+async function resolveTargetFolder(
+  defaultLocation?: string
+): Promise<vscode.Uri | undefined> {
+  if (defaultLocation) {
+    const resolvedPath = path.resolve(defaultLocation);
+    try {
+      const stats = await fs.promises.stat(resolvedPath);
+      if (stats.isDirectory()) {
+        return vscode.Uri.file(resolvedPath);
       }
-    );
-
-    return selection?.folder.uri;
+      void vscode.window.showWarningMessage(
+        `Configured default location is not a folder: ${resolvedPath}. Please update your settings.`
+      );
+    } catch (error) {
+      void vscode.window.showWarningMessage(
+        `Configured default location not found: ${resolvedPath}. Please update your settings.`
+      );
+    }
   }
 
   const pickedFolder = await vscode.window.showOpenDialog({
@@ -404,10 +419,78 @@ async function resolveTargetFolder(): Promise<vscode.Uri | undefined> {
     canSelectFolders: true,
     canSelectMany: false,
     title: "Select a directory for the new Next.js project",
-    openLabel: "Select folder",
+    openLabel: "Use this folder",
   });
 
   return pickedFolder?.[0];
+}
+
+async function handleDefaultLocationSelection(): Promise<void> {
+  const config = vscode.workspace.getConfiguration(CONFIG_NAMESPACE);
+  const current = config.get<string>("defaultLocation", "").trim();
+
+  const options: DefaultLocationQuickPickItem[] = [
+    {
+      label: "Select Folder…",
+      description: "Choose a directory to use as the default project location",
+      target: "select",
+    },
+    {
+      label: "Clear Default Location",
+      description: "Re-enable the folder picker for every project",
+      target: "clear",
+    },
+  ];
+
+  const choice = await vscode.window.showQuickPick(
+    options,
+    {
+      placeHolder: current
+        ? `Current default: ${current}`
+        : "No default project location set",
+      ignoreFocusOut: true,
+    }
+  );
+
+  if (!choice) {
+    return;
+  }
+
+  if (choice.target === "select") {
+    const picked = await vscode.window.showOpenDialog({
+      canSelectFiles: false,
+      canSelectFolders: true,
+      canSelectMany: false,
+      title: "Select default Next.js project location",
+      openLabel: "Use this folder",
+    });
+
+    if (!picked || picked.length === 0) {
+      return;
+    }
+
+    const folder = picked[0].fsPath;
+    await config.update(
+      "defaultLocation",
+      folder,
+      vscode.ConfigurationTarget.Global
+    );
+    void vscode.window.showInformationMessage(
+      `Next.js Plus default project location set to: ${folder}`
+    );
+    return;
+  }
+
+  if (choice.target === "clear") {
+    await config.update(
+      "defaultLocation",
+      "",
+      vscode.ConfigurationTarget.Global
+    );
+    void vscode.window.showInformationMessage(
+      "Next.js Plus default project location cleared."
+    );
+  }
 }
 
 async function runCreateNextAppCommand(params: {

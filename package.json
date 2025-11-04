@@ -2,7 +2,7 @@
   "name": "nextjs-plus",
   "displayName": "Next.js Plus",
   "description": "Create a new Next.js application from VS Code with a single click.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "esty",
   "license": "GPL-3.0-only",
   "engines": {
@@ -18,18 +18,31 @@
     "url": "https://github.com/esteban-cz/nextjs-plus"
   },
   "activationEvents": [
-    "onStartupFinished"
+    "onStartupFinished",
+    "onCommand:nextjs-plus.createProject",
+    "onCommand:nextjs-plus.selectDefaultLocation"
   ],
   "contributes": {
     "commands": [
       {
         "command": "nextjs-plus.createProject",
-        "title": "Create Next.js Project"
+        "title": "Next.js Plus: Create Project"
+      },
+      {
+        "command": "nextjs-plus.selectDefaultLocation",
+        "title": "Next.js Plus: Select Default Project Location"
       }
     ],
     "configuration": {
       "title": "Next.js Plus Configuration",
       "properties": {
+        "nextjsPlus.defaultLocation": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path where projects should be created by default. Leave empty to choose a folder each time. Use the 'Next.js Plus: Select Default Project Location' command to pick a folder via dialog.",
+          "markdownDescription": "**Default project location**  \nAbsolute path to use when creating projects. Leave empty to pick a folder for each project.\n\n> Tip: Run the command `Next.js Plus: Select Default Project Location` to select a folder via dialog.",
+          "order": 5
+        },
         "nextjsPlus.typescript": {
           "type": "boolean",
           "default": true,

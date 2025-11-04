@@ -30,11 +30,13 @@
 - Runs `npx create-next-app@latest` with curated defaults (TypeScript, Tailwind, ESLint, App Router, no `src/`, no experimental features, Turbopack, no React Compiler, import alias `@/*`, npm).
 - Streams scaffold progress to a dedicated VS Code output channel.
 - Optionally open the generated project automatically in a fresh VS Code window.
+- Optional default project location so you can skip the folder picker when desired.
 
 ---
 
 ## Settings
 
+- `Default project location`
 - `TypeScript` / `Prompt for TypeScript`
 - `Tailwind CSS` / `Prompt for Tailwind CSS`
 - `ESLint` / `Prompt for ESLint`
@@ -46,24 +48,29 @@
 - `Import alias` / `Prompt for import alias`
 - `Open in new window`
 
-Every setting lives under **Next.js Plus Configuration** (`nextjsPlus.*`) and maps directly to a Create Next App flag. When a “Prompt …” toggle is enabled, the stored default is ignored and you’re asked during project creation.
+Every setting lives under **Next.js Plus Configuration** (`nextjsPlus.*`). Most map directly to a Create Next App flag; the default project location lets you skip the folder picker and can be set via the `Next.js Plus: Select Default Project Location` command. When a “Prompt …” toggle is enabled, the stored default is ignored and you’re asked during project creation.
 
 ---
 
 ## Release Notes
 
-### 1.0.0
+### 1.0.2 — Default Location Command
 
-- Initial public release of Next.js Plus.
-- Create a Next.js project from the status bar with curated defaults.
+- Added command palette action (`Next.js Plus: Select Default Project Location`) to pick a default folder via native dialog.
+- Updated settings description to highlight the command.
+- Improved fallback messaging when the stored default folder is invalid.
+
+### 1.0.1 — Branding & Docs
+
+- Added logo.
+- Updated `.gitignore`.
+- Refreshed README.
+
+### 1.0.0 — Initial Release
+
+- Create Next.js project from the status bar with curated defaults.
 - Configure defaults and per-run prompts for every Create Next App flag.
 - Optionally skip opening the generated project in a new VS Code window.
-
-### 1.0.1
-
-- Added logo
-- Updated .gitignore
-- Updated README
 
 ---
 
