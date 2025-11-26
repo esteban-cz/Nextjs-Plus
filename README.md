@@ -25,9 +25,9 @@
 
 ## Features
 
-- Launch a new Next.js project from the status bar (`Next.js` entry at the bottom-left corner).
+- Launch a new Next.js project from the status bar (`Next.js` entry at the bottom-left corner) with any package manager.
 - Guided prompts for the project name and destination folder, with additional questions only when you enable the matching “Prompt …” toggles.
-- Runs `npx create-next-app@latest` with curated defaults (TypeScript, Tailwind, ESLint, App Router, no `src/`, no experimental features, Turbopack, no React Compiler, import alias `@/*`, npm).
+- Runs `create-next-app@latest` with curated defaults (TypeScript, Tailwind, ESLint, App Router, no `src/`, no experimental features, Turbopack, no React Compiler, import alias `@/*`) via your chosen package manager (default: npm).
 - Streams scaffold progress to a dedicated VS Code output channel.
 - Optionally open the generated project automatically in a fresh VS Code window.
 - Optional default project location so you can skip the folder picker when desired.
@@ -50,12 +50,21 @@
 - `shadcn init` / `Prompt for shadcn init`
 - `Install all shadcn components` / `Prompt for shadcn components`
 - `Open in new window`
+- `Only show status bar item when no project is open`
+- `Package manager` (npm, pnpm, yarn, bun)
 
 Every setting lives under **Next.js Plus Configuration** (`nextjsPlus.*`). Most map directly to a Create Next App flag; the default project location lets you skip the folder picker (set via the `Next.js Plus: Select Default Project Location` command) and the shadcn toggles let you automate `npx shadcn@latest init` and `npx shadcn@latest add --all`. When a “Prompt …” toggle is enabled, the stored default is ignored and you’re asked during project creation.
 
 ---
 
 ## Release Notes
+
+### 1.0.6 — Status bar visibility & Package manager choice
+
+- Added a setting to hide the Next.js Plus status bar item whenever a workspace folder is open (enabled by default).
+- Disable the toggle if you want the extension to stay in the status bar in every window.
+- Added a setting to choose which package manager runs Create Next App and shadcn/ui commands (npm, pnpm, yarn, bun; default npm).
+- The generated project now uses the selected package manager flag for dependency installation.
 
 ### 1.0.5 — shadcn/ui Automation
 

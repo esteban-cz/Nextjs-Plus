@@ -2,7 +2,7 @@
   "name": "nextjs-plus",
   "displayName": "Next.js Plus",
   "description": "Create a new Next.js application from VS Code with a single click.",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "publisher": "esty",
   "license": "GPL-3.0-only",
   "engines": {
@@ -203,6 +203,26 @@
           "description": "Open the generated project in a new VS Code window after scaffolding.",
           "markdownDescription": "**Open in new window**  \nAutomatically open the generated project in a new VS Code window once scaffolding completes.",
           "order": 120
+        },
+        "nextjsPlus.packageManager": {
+          "type": "string",
+          "enum": [
+            "npm",
+            "pnpm",
+            "yarn",
+            "bun"
+          ],
+          "default": "npm",
+          "description": "Package manager to use for Create Next App and optional shadcn/ui setup.",
+          "markdownDescription": "**Package manager**  \nChoose which package manager to use when running Create Next App and optional shadcn/ui commands.",
+          "order": 125
+        },
+        "nextjsPlus.statusBarOnlyWhenNoProjectOpen": {
+          "type": "boolean",
+          "default": true,
+          "description": "Only show the Next.js Plus status bar item when no folder or workspace is open.",
+          "markdownDescription": "**Status bar visibility**  \nShow the Next.js Plus status bar item only when no folder/workspace is open. Disable to always keep it visible.",
+          "order": 130
         }
       }
     }

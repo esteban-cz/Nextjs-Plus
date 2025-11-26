@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.6 - 11/26/2025
+
+- Added a setting to hide the status bar item whenever a workspace folder is open (enabled by default).
+- Disable the toggle to keep Next.js Plus visible in every window.
+- Added a setting to choose the package manager used for Create Next App and shadcn/ui commands (npm, pnpm, yarn, bun; default npm).
+- Create Next App now receives the matching `--use-*` flag and runs through the selected package manager.
+
+---
+
 ## 1.0.5 - 11/5/2025
 
 - Added shadcn/ui automation settings with optional prompts.
