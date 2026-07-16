@@ -2,11 +2,11 @@
   "name": "nextjs-plus",
   "displayName": "Next.js Plus",
   "description": "Create a new Next.js application from VS Code with a single click.",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "publisher": "esty",
   "license": "GPL-3.0-only",
   "engines": {
-    "vscode": "^1.84.0"
+    "vscode": "^1.125.0"
   },
   "categories": [
     "Other"
@@ -71,18 +71,28 @@
           "markdownDescription": "_Prompt for Tailwind CSS_  \nAsk at creation time whether to include Tailwind CSS.",
           "order": 21
         },
-        "nextjsPlus.eslint": {
-          "type": "boolean",
-          "default": true,
-          "description": "Add ESLint configuration (--eslint). Ignored when 'Prompt for ESLint' is enabled.",
-          "markdownDescription": "**ESLint**  \nAdd ESLint configuration (`--eslint`). This value is used unless 'Prompt for ESLint' is enabled.",
+        "nextjsPlus.linter": {
+          "type": "string",
+          "enum": [
+            "eslint",
+            "biome",
+            "none"
+          ],
+          "enumDescriptions": [
+            "Use ESLint with Next.js rules.",
+            "Use Biome for linting and formatting.",
+            "Do not configure a linter."
+          ],
+          "default": "eslint",
+          "description": "Linter configured by Create Next App. Ignored when 'Prompt for linter' is enabled.",
+          "markdownDescription": "**Linter**  \nChoose ESLint (`--eslint`), Biome (`--biome`), or no linter (`--no-linter`).",
           "order": 30
         },
-        "nextjsPlus.eslintPrompt": {
+        "nextjsPlus.linterPrompt": {
           "type": "boolean",
           "default": false,
-          "description": "Prompt whether to add ESLint when creating a project.",
-          "markdownDescription": "_Prompt for ESLint_  \nAsk at creation time whether to include ESLint.",
+          "description": "Prompt which linter to configure when creating a project.",
+          "markdownDescription": "_Prompt for linter_  \nAsk at creation time whether to use ESLint, Biome, or no linter.",
           "order": 31
         },
         "nextjsPlus.appRouter": {
@@ -113,46 +123,18 @@
           "markdownDescription": "_Prompt for src/ directory_  \nAsk at creation time whether to create a `src/` directory.",
           "order": 51
         },
-        "nextjsPlus.experimentalApp": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable experimental App Router features (--experimental-app). Ignored when 'Prompt for experimental App features' is enabled.",
-          "markdownDescription": "**Experimental App features**  \nEnable experimental App Router capabilities (`--experimental-app`). This value is used unless 'Prompt for experimental App features' is enabled.",
-          "order": 60
-        },
-        "nextjsPlus.experimentalAppPrompt": {
-          "type": "boolean",
-          "default": false,
-          "description": "Prompt whether to enable experimental App Router features.",
-          "markdownDescription": "_Prompt for experimental App features_  \nAsk at creation time whether to enable experimental App Router capabilities.",
-          "order": 61
-        },
-        "nextjsPlus.turbopack": {
-          "type": "boolean",
-          "default": true,
-          "description": "Use Turbopack for development (--turbopack). Ignored when 'Prompt for Turbopack' is enabled.",
-          "markdownDescription": "**Turbopack**  \nUse Turbopack for the development server (`--turbopack`). This value is used unless 'Prompt for Turbopack' is enabled.",
-          "order": 70
-        },
-        "nextjsPlus.turbopackPrompt": {
-          "type": "boolean",
-          "default": false,
-          "description": "Prompt whether to use Turbopack when creating a project.",
-          "markdownDescription": "_Prompt for Turbopack_  \nAsk at creation time whether to run the dev server with Turbopack.",
-          "order": 71
-        },
         "nextjsPlus.reactCompiler": {
           "type": "boolean",
           "default": false,
-          "description": "Enable the experimental React Compiler (--react-compiler). Ignored when 'Prompt for React Compiler' is enabled.",
-          "markdownDescription": "**React Compiler**  \nEnable the experimental React Compiler (`--react-compiler`). This value is used unless 'Prompt for React Compiler' is enabled.",
+          "description": "Enable the React Compiler (--react-compiler). Ignored when 'Prompt for React Compiler' is enabled.",
+          "markdownDescription": "**React Compiler**  \nEnable the React Compiler (`--react-compiler`). This value is used unless 'Prompt for React Compiler' is enabled.",
           "order": 80
         },
         "nextjsPlus.reactCompilerPrompt": {
           "type": "boolean",
           "default": false,
-          "description": "Prompt whether to enable the experimental React Compiler.",
-          "markdownDescription": "_Prompt for React Compiler_  \nAsk at creation time whether to enable the experimental React Compiler.",
+          "description": "Prompt whether to enable the React Compiler.",
+          "markdownDescription": "_Prompt for React Compiler_  \nAsk at creation time whether to enable the React Compiler.",
           "order": 81
         },
         "nextjsPlus.importAlias": {
@@ -169,6 +151,20 @@
           "markdownDescription": "_Prompt for import alias_  \nAsk at creation time which import alias to use.",
           "order": 91
         },
+        "nextjsPlus.agentsMd": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include AGENTS.md and CLAUDE.md guidance files (--agents-md). Ignored when 'Prompt for agent guidance files' is enabled.",
+          "markdownDescription": "**Coding-agent guidance files**  \nInclude `AGENTS.md` and `CLAUDE.md` (`--agents-md`) so coding agents use documentation matching the installed Next.js version.",
+          "order": 95
+        },
+        "nextjsPlus.agentsMdPrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompt whether to include AGENTS.md and CLAUDE.md when creating a project.",
+          "markdownDescription": "_Prompt for agent guidance files_  \nAsk at creation time whether to include `AGENTS.md` and `CLAUDE.md`.",
+          "order": 96
+        },
         "nextjsPlus.shadcnInit": {
           "type": "boolean",
           "default": true,
@@ -182,6 +178,42 @@
           "description": "Prompt whether to run shadcn/ui init after each project is created.",
           "markdownDescription": "_Prompt for shadcn init_  \nAsk at creation time whether to run `npx shadcn@latest init`.",
           "order": 101
+        },
+        "nextjsPlus.shadcnBase": {
+          "type": "string",
+          "enum": [
+            "base",
+            "radix"
+          ],
+          "enumDescriptions": [
+            "Use Base UI primitives (recommended by shadcn).",
+            "Use Radix UI primitives."
+          ],
+          "default": "base",
+          "description": "Component library passed to shadcn init (--base). Ignored when 'Prompt for shadcn component library' is enabled.",
+          "markdownDescription": "**shadcn component library**  \nChoose Base UI or Radix UI for `shadcn init` (`--base`).",
+          "order": 105
+        },
+        "nextjsPlus.shadcnBasePrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompt for the shadcn component library when creating a project.",
+          "markdownDescription": "_Prompt for shadcn component library_  \nAsk at creation time whether to use Base UI or Radix UI.",
+          "order": 106
+        },
+        "nextjsPlus.shadcnPreset": {
+          "type": "string",
+          "default": "nova",
+          "description": "Preset name, code, or URL passed to shadcn init (--preset). Ignored when 'Prompt for shadcn preset' is enabled.",
+          "markdownDescription": "**shadcn preset**  \nSet the named preset, custom preset code, or preset URL passed to `shadcn init --preset`.",
+          "order": 107
+        },
+        "nextjsPlus.shadcnPresetPrompt": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompt for the shadcn preset when creating a project.",
+          "markdownDescription": "_Prompt for shadcn preset_  \nAsk at creation time for a preset name, custom code, or URL.",
+          "order": 108
         },
         "nextjsPlus.shadcnInstallAll": {
           "type": "boolean",
@@ -233,9 +265,9 @@
     "prepublishOnly": "npm run compile"
   },
   "devDependencies": {
-    "@types/node": "^18.17.0",
-    "@types/vscode": "^1.84.0",
-    "typescript": "^5.2.2",
+    "@types/node": "^26.1.1",
+    "@types/vscode": "^1.125.0",
+    "typescript": "^7.0.2",
     "vsce": "^2.15.0"
   }
 }

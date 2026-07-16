@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.7 - 7/16/2026
+
+- Added settings and optional prompts for Create Next App's coding-agent guidance files.
+- Replaced the ESLint toggle with the current ESLint/Biome/none linter selection while honoring existing ESLint preferences.
+- Added settings and optional prompts for the updated shadcn component library and presets.
+- Defaulted shadcn initialization to Base UI with the Nova preset.
+- Removed retired experimental App Router and bundler options and updated shadcn CLI flags so project creation remains non-interactive.
+- Updated the minimum VS Code version to 1.125 to match the extension's API typings.
+
+---
+
 ## 1.0.6 - 11/26/2025
 
 - Added a setting to hide the status bar item whenever a workspace folder is open (enabled by default).

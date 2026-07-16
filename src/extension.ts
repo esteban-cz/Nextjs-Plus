@@ -25,14 +25,15 @@ interface ProjectOptions {
   packageManager: PackageManager
   useTypeScript: boolean
   includeTailwind: boolean
-  includeEslint: boolean
+  linter: Linter
   useAppRouter: boolean
   useSrcDirectory: boolean
-  enableExperimentalApp: boolean
-  enableTurbopack: boolean
   enableReactCompiler: boolean
   importAlias: string
+  includeAgentsMd: boolean
   initShadcn: boolean
+  shadcnBase: ShadcnBase
+  shadcnPreset: string
   installAllShadcnComponents: boolean
 }
 
@@ -44,9 +45,19 @@ interface DefaultLocationQuickPickItem extends vscode.QuickPickItem {
   target: 'select' | 'clear'
 }
 
+interface ShadcnBaseQuickPickItem extends vscode.QuickPickItem {
+  value: ShadcnBase
+}
+
+interface LinterQuickPickItem extends vscode.QuickPickItem {
+  value: Linter
+}
+
 let statusBarItem: vscode.StatusBarItem | undefined
 
 type PackageManager = 'npm' | 'pnpm' | 'yarn' | 'bun'
+type ShadcnBase = 'base' | 'radix'
+type Linter = 'eslint' | 'biome' | 'none'
 
 export function activate(context: vscode.ExtensionContext) {
   const createProjectCommand = vscode.commands.registerCommand(
@@ -278,16 +289,8 @@ async function resolveProjectOptions(
     return undefined
   }
 
-  const includeEslint = await resolveBooleanOption({
-    config,
-    settingKey: 'eslint',
-    promptKey: 'eslintPrompt',
-    defaultValue: true,
-    promptMessage: 'Add ESLint?',
-    enableDescription: 'Configures ESLint with Next.js defaults.',
-    disableDescription: 'Skips ESLint setup.'
-  })
-  if (includeEslint === undefined) {
+  const linter = await resolveLinter(config)
+  if (linter === undefined) {
     return undefined
   }
 
@@ -317,39 +320,13 @@ async function resolveProjectOptions(
     return undefined
   }
 
-  const enableExperimentalApp = await resolveBooleanOption({
-    config,
-    settingKey: 'experimentalApp',
-    promptKey: 'experimentalAppPrompt',
-    defaultValue: false,
-    promptMessage: 'Enable experimental App Router features?',
-    enableDescription: 'Opt-in to experimental App Router capabilities.',
-    disableDescription: 'Leaves experimental App Router features disabled.'
-  })
-  if (enableExperimentalApp === undefined) {
-    return undefined
-  }
-
-  const enableTurbopack = await resolveBooleanOption({
-    config,
-    settingKey: 'turbopack',
-    promptKey: 'turbopackPrompt',
-    defaultValue: true,
-    promptMessage: 'Use Turbopack for the dev server?',
-    enableDescription: 'Starts development using Turbopack.',
-    disableDescription: 'Uses the traditional webpack-based dev server.'
-  })
-  if (enableTurbopack === undefined) {
-    return undefined
-  }
-
   const enableReactCompiler = await resolveBooleanOption({
     config,
     settingKey: 'reactCompiler',
     promptKey: 'reactCompilerPrompt',
     defaultValue: false,
     promptMessage: 'Enable the React Compiler?',
-    enableDescription: 'Opt-in to the experimental React Compiler.',
+    enableDescription: 'Enables the React Compiler.',
     disableDescription: 'Keeps the React Compiler disabled.'
   })
   if (enableReactCompiler === undefined) {
@@ -367,6 +344,20 @@ async function resolveProjectOptions(
     return undefined
   }
 
+  const includeAgentsMd = await resolveBooleanOption({
+    config,
+    settingKey: 'agentsMd',
+    promptKey: 'agentsMdPrompt',
+    defaultValue: true,
+    promptMessage: 'Include AGENTS.md and CLAUDE.md?',
+    enableDescription:
+      'Guides coding agents to use documentation matching the installed Next.js version.',
+    disableDescription: 'Skips the coding-agent guidance files.'
+  })
+  if (includeAgentsMd === undefined) {
+    return undefined
+  }
+
   const initShadcn = await resolveBooleanOption({
     config,
     settingKey: 'shadcnInit',
@@ -377,6 +368,23 @@ async function resolveProjectOptions(
     disableDescription: 'Skips shadcn/ui initialization.'
   })
   if (initShadcn === undefined) {
+    return undefined
+  }
+
+  const shadcnBase = await resolveShadcnBase(config)
+  if (shadcnBase === undefined) {
+    return undefined
+  }
+
+  const shadcnPreset = await resolveStringOption({
+    config,
+    settingKey: 'shadcnPreset',
+    promptKey: 'shadcnPresetPrompt',
+    defaultValue: 'nova',
+    promptMessage: 'Enter a shadcn preset name, code, or URL.',
+    emptyValidationMessage: 'shadcn preset cannot be empty'
+  })
+  if (shadcnPreset === undefined) {
     return undefined
   }
 
@@ -398,16 +406,87 @@ async function resolveProjectOptions(
     packageManager,
     useTypeScript,
     includeTailwind,
-    includeEslint,
+    linter,
     useAppRouter,
     useSrcDirectory,
-    enableExperimentalApp,
-    enableTurbopack,
     enableReactCompiler,
     importAlias: importAlias.trim(),
+    includeAgentsMd,
     initShadcn,
+    shadcnBase,
+    shadcnPreset: shadcnPreset.trim(),
     installAllShadcnComponents
   }
+}
+
+async function resolveLinter(
+  config: vscode.WorkspaceConfiguration
+): Promise<Linter | undefined> {
+  const fallback = getLinter(config)
+  const shouldPrompt =
+    getConfiguredValue<boolean>(config, 'linterPrompt') ??
+    getConfiguredValue<boolean>(config, 'eslintPrompt') ??
+    false
+
+  if (!shouldPrompt) {
+    return fallback
+  }
+
+  const items: LinterQuickPickItem[] = [
+    {
+      label: fallback === 'eslint' ? 'ESLint (default)' : 'ESLint',
+      description: 'Use the traditional Next.js ESLint configuration.',
+      value: 'eslint'
+    },
+    {
+      label: fallback === 'biome' ? 'Biome (default)' : 'Biome',
+      description: 'Use Biome for fast linting and formatting.',
+      value: 'biome'
+    },
+    {
+      label: fallback === 'none' ? 'None (default)' : 'None',
+      description: 'Skip linter configuration.',
+      value: 'none'
+    }
+  ]
+
+  const selection = await vscode.window.showQuickPick(items, {
+    placeHolder: 'Select a linter.',
+    ignoreFocusOut: true
+  })
+
+  return selection?.value
+}
+
+async function resolveShadcnBase(
+  config: vscode.WorkspaceConfiguration
+): Promise<ShadcnBase | undefined> {
+  const fallback = getShadcnBase(config)
+  const shouldPrompt = config.get<boolean>('shadcnBasePrompt', false)
+
+  if (!shouldPrompt) {
+    return fallback
+  }
+
+  const items: ShadcnBaseQuickPickItem[] = [
+    {
+      label: fallback === 'base' ? 'Base (default)' : 'Base',
+      description: 'Use Base UI primitives (recommended by shadcn).',
+      value: 'base'
+    },
+    {
+      label: fallback === 'radix' ? 'Radix (default)' : 'Radix',
+      description: 'Use Radix UI primitives.',
+      value: 'radix'
+    }
+  ]
+
+  const selection = await vscode.window.showQuickPick(items, {
+    placeHolder: 'Select a shadcn component library.',
+    ignoreFocusOut: true
+  })
+
+  return selection?.value
 }
 
 async function resolveBooleanOption(params: {
@@ -456,6 +535,7 @@ async function resolveStringOption(params: {
   promptKey: string
   defaultValue: string
   promptMessage: string
+  emptyValidationMessage?: string
 }): Promise<string | undefined> {
   const fallback = params.config.get<string>(
     params.settingKey,
@@ -473,7 +553,7 @@ async function resolveStringOption(params: {
     ignoreFocusOut: true,
     validateInput: (input) => {
       if (!input.trim()) {
-        return 'Import alias cannot be empty'
+        return params.emptyValidationMessage ?? 'Value cannot be empty'
       }
       return undefined
     }
@@ -625,21 +705,22 @@ function buildCliFlags(options: ProjectOptions): string[] {
   const flags: string[] = []
 
   flags.push(getPackageManagerFlag(options.packageManager))
-  flags.push(options.useTypeScript ? '--typescript' : '--no-typescript')
+  flags.push(options.useTypeScript ? '--ts' : '--js')
   flags.push(options.includeTailwind ? '--tailwind' : '--no-tailwind')
-  flags.push(options.includeEslint ? '--eslint' : '--no-eslint')
+  flags.push(
+    options.linter === 'eslint'
+      ? '--eslint'
+      : options.linter === 'biome'
+        ? '--biome'
+        : '--no-linter'
+  )
   flags.push(options.useAppRouter ? '--app' : '--no-app')
   flags.push(options.useSrcDirectory ? '--src-dir' : '--no-src-dir')
-  flags.push(
-    options.enableExperimentalApp
-      ? '--experimental-app'
-      : '--no-experimental-app'
-  )
-  flags.push(options.enableTurbopack ? '--turbopack' : '--no-turbopack')
   flags.push(
     options.enableReactCompiler ? '--react-compiler' : '--no-react-compiler'
   )
   flags.push('--import-alias', options.importAlias)
+  flags.push(options.includeAgentsMd ? '--agents-md' : '--no-agents-md')
 
   return flags
 }
@@ -657,14 +738,22 @@ async function runShadcnSetup(params: {
   options: ProjectOptions
   output: vscode.OutputChannel
 }): Promise<void> {
-  if (params.options.initShadcn) {
+  if (params.options.initShadcn || params.options.installAllShadcnComponents) {
     const initRunner = buildPackageRunner(
       params.options.packageManager,
       'shadcn@latest'
     )
     await runExternalCommand({
       command: initRunner.command,
-      args: [...initRunner.args, 'init', '-y', '--base-color=zinc'],
+      args: [
+        ...initRunner.args,
+        'init',
+        '-y',
+        '--base',
+        params.options.shadcnBase,
+        '--preset',
+        params.options.shadcnPreset
+      ],
       cwd: params.projectPath,
       output: params.output,
       label: 'shadcn init'
@@ -678,7 +767,7 @@ async function runShadcnSetup(params: {
     )
     await runExternalCommand({
       command: addRunner.command,
-      args: [...addRunner.args, 'add', '--all'],
+      args: [...addRunner.args, 'add', '--all', '-y'],
       cwd: params.projectPath,
       output: params.output,
       label: 'shadcn add --all'
@@ -739,6 +828,46 @@ function getPackageManager(
   }
 
   return 'npm'
+}
+
+function getLinter(config: vscode.WorkspaceConfiguration): Linter {
+  const configuredLinter = getConfiguredValue<string>(config, 'linter')
+  const value = configuredLinter?.trim().toLowerCase()
+
+  if (value === 'biome' || value === 'none') {
+    return value
+  }
+
+  if (value === 'eslint') {
+    return value
+  }
+
+  const legacyEslint = getConfiguredValue<boolean>(config, 'eslint')
+  if (legacyEslint === false) {
+    return 'none'
+  }
+
+  return 'eslint'
+}
+
+function getConfiguredValue<T>(
+  config: vscode.WorkspaceConfiguration,
+  key: string
+): T | undefined {
+  const inspected = config.inspect<T>(key)
+
+  return (
+    inspected?.workspaceFolderValue ??
+    inspected?.workspaceValue ??
+    inspected?.globalValue
+  )
+}
+
+function getShadcnBase(config: vscode.WorkspaceConfiguration): ShadcnBase {
+  return config.get<string>('shadcnBase', 'base').trim().toLowerCase() ===
+    'radix'
+    ? 'radix'
+    : 'base'
 }
 
 function getPackageManagerFlag(packageManager: PackageManager): string {

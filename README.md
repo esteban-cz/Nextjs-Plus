@@ -27,11 +27,11 @@
 
 - Launch a new Next.js project from the status bar (`Next.js` entry at the bottom-left corner) with any package manager.
 - Guided prompts for the project name and destination folder, with additional questions only when you enable the matching “Prompt …” toggles.
-- Runs `create-next-app@latest` with curated defaults (TypeScript, Tailwind, ESLint, App Router, no `src/`, no experimental features, Turbopack, no React Compiler, import alias `@/*`) via your chosen package manager (default: npm).
+- Runs `create-next-app@latest` non-interactively with curated defaults (TypeScript, Tailwind, ESLint, App Router, no `src/`, no React Compiler, import alias `@/*`, and coding-agent guidance files) via your chosen package manager (default: npm).
 - Streams scaffold progress to a dedicated VS Code output channel.
 - Optionally open the generated project automatically in a fresh VS Code window.
 - Optional default project location so you can skip the folder picker when desired.
-- Optional shadcn/ui automation to initialize the library and install every component right after scaffolding.
+- Optional shadcn/ui automation with configurable Base/Radix component libraries and presets, plus the ability to install every component right after scaffolding.
 
 ---
 
@@ -40,24 +40,35 @@
 - `Default project location`
 - `TypeScript` / `Prompt for TypeScript`
 - `Tailwind CSS` / `Prompt for Tailwind CSS`
-- `ESLint` / `Prompt for ESLint`
+- `Linter` (ESLint, Biome, or none) / `Prompt for linter`
 - `App Router` / `Prompt for App Router`
 - `Create src/ directory` / `Prompt for src/ directory`
-- `Experimental App features` / `Prompt for experimental App features`
-- `Turbopack` / `Prompt for Turbopack`
 - `React Compiler` / `Prompt for React Compiler`
 - `Import alias` / `Prompt for import alias`
+- `Coding-agent guidance files` / `Prompt for agent guidance files`
 - `shadcn init` / `Prompt for shadcn init`
+- `shadcn component library` / `Prompt for shadcn component library`
+- `shadcn preset` / `Prompt for shadcn preset`
 - `Install all shadcn components` / `Prompt for shadcn components`
 - `Open in new window`
 - `Only show status bar item when no project is open`
 - `Package manager` (npm, pnpm, yarn, bun)
 
-Every setting lives under **Next.js Plus Configuration** (`nextjsPlus.*`). Most map directly to a Create Next App flag; the default project location lets you skip the folder picker (set via the `Next.js Plus: Select Default Project Location` command) and the shadcn toggles let you automate `npx shadcn@latest init` and `npx shadcn@latest add --all`. When a “Prompt …” toggle is enabled, the stored default is ignored and you’re asked during project creation.
+Every setting lives under **Next.js Plus Configuration** (`nextjsPlus.*`). Most map directly to a Create Next App flag; the default project location lets you skip the folder picker (set via the `Next.js Plus: Select Default Project Location` command), while the shadcn settings control initialization, component library, preset, and optional installation of all components. When a “Prompt …” toggle is enabled, the stored default is ignored and you’re asked during project creation.
 
 ---
 
 ## Release Notes
+
+### 1.0.7 — Next.js and shadcn CLI updates
+
+- Added support for Create Next App's `AGENTS.md`/`CLAUDE.md` option.
+- Replaced the ESLint toggle with an ESLint/Biome/none linter choice.
+- Added shadcn Base/Radix component-library and preset settings.
+- Updated generated commands for the latest Create Next App and shadcn CLI flags.
+- Removed the retired experimental App Router and bundler settings.
+- shadcn setup now runs non-interactively with explicit defaults (`base` and `nova`).
+- Updated the minimum supported VS Code version to 1.125.
 
 ### 1.0.6 — Status bar visibility & Package manager choice
 
