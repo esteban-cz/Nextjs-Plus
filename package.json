@@ -2,7 +2,7 @@
   "name": "nextjs-plus",
   "displayName": "Next.js Plus",
   "description": "Create a new Next.js application from VS Code with a single click.",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "publisher": "esty",
   "license": "GPL-3.0-only",
   "engines": {
@@ -218,8 +218,8 @@
         "nextjsPlus.shadcnInstallAll": {
           "type": "boolean",
           "default": false,
-          "description": "Install all shadcn/ui components (`npx shadcn@latest add --all`) after initialization. Ignored when 'Prompt for shadcn components' is enabled.",
-          "markdownDescription": "**Install all shadcn components**  \nRun `npx shadcn@latest add --all` after initialization to pull in every component. This value is used unless 'Prompt for shadcn components' is enabled.",
+          "description": "Install all shadcn/ui components after initialization. When disabled, only Button is installed. Ignored when 'Prompt for shadcn components' is enabled.",
+          "markdownDescription": "**Install all shadcn components**  \nRun `npx shadcn@latest add --all` after initialization to pull in every component. When disabled, initialization installs only `button`.",
           "order": 110
         },
         "nextjsPlus.shadcnInstallAllPrompt": {
@@ -260,6 +260,7 @@
     }
   },
   "scripts": {
+    "package": "vsce package",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "prepublishOnly": "npm run compile"

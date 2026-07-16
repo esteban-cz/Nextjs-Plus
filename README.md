@@ -6,7 +6,7 @@
 <sub>
   
   [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://choosealicense.com/licenses/gpl-3.0/)&nbsp;&nbsp;&nbsp;
-  ![Maintenance](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)&nbsp;&nbsp;&nbsp;
+  ![Maintenance](https://img.shields.io/maintenance/yes/2026?style=for-the-badge)&nbsp;&nbsp;&nbsp;
   ![Extension Version](https://img.shields.io/github/package-json/v/esteban-cz/nextjs-plus/master?style=for-the-badge&label=Version)&nbsp;&nbsp;&nbsp;
   ![GitHub last commit](https://img.shields.io/github/last-commit/esteban-cz/nextjs-plus?style=for-the-badge)
   
@@ -31,7 +31,7 @@
 - Streams scaffold progress to a dedicated VS Code output channel.
 - Optionally open the generated project automatically in a fresh VS Code window.
 - Optional default project location so you can skip the folder picker when desired.
-- Optional shadcn/ui automation with configurable Base/Radix component libraries and presets, plus the ability to install every component right after scaffolding.
+- Optional shadcn/ui automation with configurable Base/Radix component libraries and presets. Initialization installs Button by default, or every component when enabled.
 
 ---
 
@@ -60,6 +60,10 @@ Every setting lives under **Next.js Plus Configuration** (`nextjsPlus.*`). Most 
 
 ## Release Notes
 
+### 1.0.8 — shadcn CLI update
+
+- When installing all shadcn components is disabled, initialization installs Button only.
+
 ### 1.0.7 — Next.js and shadcn CLI updates
 
 - Added support for Create Next App's `AGENTS.md`/`CLAUDE.md` option.
@@ -68,6 +72,7 @@ Every setting lives under **Next.js Plus Configuration** (`nextjsPlus.*`). Most 
 - Updated generated commands for the latest Create Next App and shadcn CLI flags.
 - Removed the retired experimental App Router and bundler settings.
 - shadcn setup now runs non-interactively with explicit defaults (`base` and `nova`).
+- When installing all shadcn components is disabled, initialization installs Button only.
 - Updated the minimum supported VS Code version to 1.125.
 
 ### 1.0.6 — Status bar visibility & Package manager choice

@@ -1,11 +1,18 @@
 # Changelog
 
+## 1.0.8 - 7/16/2026
+
+- Added Button as the default shadcn component when installing all components is disabled.
+
+---
+
 ## 1.0.7 - 7/16/2026
 
 - Added settings and optional prompts for Create Next App's coding-agent guidance files.
 - Replaced the ESLint toggle with the current ESLint/Biome/none linter selection while honoring existing ESLint preferences.
 - Added settings and optional prompts for the updated shadcn component library and presets.
 - Defaulted shadcn initialization to Base UI with the Nova preset.
+- Added Button as the default shadcn component when installing all components is disabled.
 - Removed retired experimental App Router and bundler options and updated shadcn CLI flags so project creation remains non-interactive.
 - Updated the minimum VS Code version to 1.125 to match the extension's API typings.
 

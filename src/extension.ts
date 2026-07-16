@@ -396,7 +396,7 @@ async function resolveProjectOptions(
     promptMessage: 'Install all shadcn/ui components?',
     enableDescription:
       'Runs `npx shadcn@latest add --all` after initialization.',
-    disableDescription: 'Leaves component installation for later.'
+    disableDescription: 'Installs only the shadcn Button component.'
   })
   if (installAllShadcnComponents === undefined) {
     return undefined
@@ -743,11 +743,16 @@ async function runShadcnSetup(params: {
       params.options.packageManager,
       'shadcn@latest'
     )
+    const initialComponents = params.options.installAllShadcnComponents
+      ? []
+      : ['button']
+
     await runExternalCommand({
       command: initRunner.command,
       args: [
         ...initRunner.args,
         'init',
+        ...initialComponents,
         '-y',
         '--base',
         params.options.shadcnBase,
